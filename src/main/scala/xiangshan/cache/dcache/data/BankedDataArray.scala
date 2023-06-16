@@ -177,7 +177,8 @@ class BankedDataArray(implicit p: Parameters) extends AbstractBankedDataArray {
 
     // multiway data bank
     val data_bank = Array.fill(DCacheWays) {
-      Module(new SRAMTemplate(
+      //Module(new SRAMTemplate(
+      Module(new DCacheDataSRAMTemplate(
         Bits(DCacheSRAMRowBits.W),
         set = DCacheSets,
         way = 1,

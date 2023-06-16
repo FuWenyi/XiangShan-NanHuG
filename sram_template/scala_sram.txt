@@ -1,0 +1,99 @@
+class TS5N28HPCPLVTA128X64M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(64.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(7.W)))
+  val D =   IO(Input(UInt(64.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA128X64M2F.v")
+}
+class TS5N28HPCPLVTA32X80M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(80.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(5.W)))
+  val D =   IO(Input(UInt(80.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA32X80M2F.v")
+}
+class TS5N28HPCPLVTA128X32M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(32.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(7.W)))
+  val D =   IO(Input(UInt(32.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA128X32M2F.v")
+}
+class TS5N28HPCPLVTA128X50M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(50.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(7.W)))
+  val D =   IO(Input(UInt(50.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA128X50M2F.v")
+}
+class TS5N28HPCPLVTA32X512M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(512.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(5.W)))
+  val D =   IO(Input(UInt(512.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA32X512M2F.v")
+}
+class TS5N28HPCPLVTA32X32M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(32.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(5.W)))
+  val D =   IO(Input(UInt(32.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA32X32M2F.v")
+}
+class TS5N28HPCPLVTA4X261M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(261.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(2.W)))
+  val D =   IO(Input(UInt(261.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA4X261M2F.v")
+}
+class TS5N28HPCPLVTA4X334M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(334.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(2.W)))
+  val D =   IO(Input(UInt(334.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA4X334M2F.v")
+}
+class TS5N28HPCPLVTA256X8M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(8.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(8.W)))
+  val D =   IO(Input(UInt(8.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA256X8M2F.v")
+}
+class TS5N28HPCPLVTA256X16M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(16.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(8.W)))
+  val D =   IO(Input(UInt(16.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA256X16M2F.v")
+}
+class TS5N28HPCPLVTA256X80M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(80.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(8.W)))
+  val D =   IO(Input(UInt(80.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA256X80M2F.v")
+}

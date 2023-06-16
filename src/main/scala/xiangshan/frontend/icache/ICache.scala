@@ -26,6 +26,7 @@ import huancun.{AliasField, DirtyField, PreferCacheField, PrefetchField}
 import xiangshan._
 import xiangshan.frontend._
 import xiangshan.cache._
+import utils._
 import utils.{SRAMTemplate, _}
 import xiangshan.backend.fu.PMPReqBundle
 import xiangshan.cache.mmu.{BlockTlbRequestIO, TlbReq}
@@ -172,7 +173,8 @@ class ICacheMetaArray()(implicit p: Parameters) extends ICacheArray
   val write_meta_bits = Wire(UInt(metaEntryBits.W))
 
   val tagArrays = (0 until 2) map { bank =>
-    val tagArray = Module(new SRAMTemplate(
+    //val tagArray = Module(new SRAMTemplate(
+    val tagArray = Module(new IcacheTagSRAMTemplate(
       UInt(metaEntryBits.W),
       set=nSets/2,
       way=nWays,
@@ -740,7 +742,8 @@ class ICachePartWayArray[T <: Data](gen: T, pWay: Int)(implicit p: Parameters) e
   io.read.req.map(_.ready := !io.write.valid)
 
   val srams = (0 until PortNumber) map { bank =>
-    val sramBank = Module(new SRAMTemplate(
+    //val sramBank = Module(new SRAMTemplate(
+    val sramBank = Module(new IcacheDataSRAMTemplate(
       gen,
       set=nSets/2,
       way=pWay,

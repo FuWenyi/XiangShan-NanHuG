@@ -19,6 +19,7 @@ package xiangshan.cache
 import chipsalliance.rocketchip.config.Parameters
 import chisel3._
 import chisel3.util._
+import utils._
 import utils.SRAMTemplate
 import xiangshan.cache.CacheInstrucion._
 
@@ -57,7 +58,9 @@ class TagArray(implicit p: Parameters) extends DCacheModule {
     rst_cnt := rst_cnt + 1.U
   }
 
-  val tag_array = Module(new SRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
+  //val tag_array = Module(new SRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
+  //  shouldReset = false, holdRead = false, singlePort = true))
+  val tag_array = Module(new DcacheTagSRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
     shouldReset = false, holdRead = false, singlePort = true))
 
   // val ecc_array = Module(new SRAMTemplate(UInt(eccTagBits.W), set = nSets, way = nWays,

@@ -1,0 +1,9 @@
+class TS5N28HPCPLVTA128X32M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(32.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(7.W)))
+  val D =   IO(Input(UInt(32.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA128X32M2F.v")
+}

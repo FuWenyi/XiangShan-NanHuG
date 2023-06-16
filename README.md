@@ -116,3 +116,6 @@ In the development of XiangShan, some sub-modules from the open-source community
 
 We are grateful for the support of the open-source community and encourage other open-source projects to reuse our code within the scope of the [license](LICENSE).
 
+make emu CONFIG=NanHuGConfig -j32
+make verilog CONFIG=NanHuGConfig -j32
+./build/emu -i ./ready-to-run/microbench.bin
