@@ -1,4 +1,4 @@
-module TS5N28HPCPLVTA128X64M2F(
+module TS5N28HPCPLVTA128X32M2F(
     Q, CLK, CEB, WEB, A, D
 );
 parameter Bits = 32;

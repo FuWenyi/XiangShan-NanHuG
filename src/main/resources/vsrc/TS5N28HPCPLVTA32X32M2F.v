@@ -1,7 +1,7 @@
-module TS5N28HPCPLVTA128X64M2F(
+module TS5N28HPCPLVTA32X32M2F(
     Q, CLK, CEB, WEB, A, D
 );
-parameter Bits = 512;
+parameter Bits = 32;
 parameter Word_Depth = 32;
 parameter Add_Width = 5;
 

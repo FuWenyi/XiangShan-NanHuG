@@ -8,6 +8,7 @@ def generate_verilog_file(bits, word_depth, add_width):
     with open(file_name, 'w') as f:
         with open('sram_template.v', 'r') as template_file:
             template = template_file.read()
+            template = template.replace('TS5N28HPCPLVTA128X64M2F', 'TS5N28HPCPLVTA{}X{}M2F'.format(word_depth, bits))
             template = template.replace('Bits = 64', 'Bits = {}'.format(bits))
             template = template.replace('Word_Depth = 128', 'Word_Depth = {}'.format(word_depth))
             template = template.replace('Add_Width = 7', 'Add_Width = {}'.format(add_width))
