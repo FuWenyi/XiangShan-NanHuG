@@ -228,7 +228,8 @@ class WithNKBL2
     val upParams = up(XSTileKey)
     val l2sets = n * 1024 / banks / ways / 64
     upParams.map(p => p.copy(
-      L2CacheParamsOpt = Some(HCCacheParameters(
+      L2CacheParamsOpt = None,
+      /*L2CacheParamsOpt = Some(HCCacheParameters(
         name = "L2",
         level = 2,
         ways = ways,
@@ -250,7 +251,7 @@ class WithNKBL2
         tagECC = None,
         dataECC = None,
         simulation = !site(DebugOptionsKey).FPGAPlatform
-      )),
+      )),*/
       L2NBanks = banks
     ))
 })
@@ -271,13 +272,20 @@ class WithNKBL3(n: Int, ways: Int = 8, inclusive: Boolean = true, banks: Int = 1
         sets = sets,
         inclusive = inclusive,
         clientCaches = tiles.map{ core =>
-          val l2params = core.L2CacheParamsOpt.get.toCacheParams
+          /*val l2params = core.L2CacheParamsOpt.get.toCacheParams
           l2params.copy(
             sets = 2 * clientDirBytes / core.L2NBanks / l2params.ways / 64,
             blockGranularity = log2Ceil(clientDirBytes / core.L2NBanks / l2params.ways / 64 / tiles.size)
+          )*/
+          CacheParameters(
+            "dcache",
+            sets = 2 * core.dcacheParametersOpt.get.nSets,
+            ways = core.dcacheParametersOpt.get.nWays + 2,
+            blockGranularity = log2Ceil(2 * core.dcacheParametersOpt.get.nSets),
+            aliasBitsOpt = None
           )
         },
-        enablePerf = true,
+        //enablePerf = true,
         ctrl = Some(CacheCtrl(
           address = 0x39000000,
           numCores = tiles.size
@@ -360,7 +368,7 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
           LduCnt = 2,
           StuCnt = 2
         ),
-        //prefetcher = None,
+        prefetcher = None,
         EnableSC = false,
         EnableLoop = false,
         FtbSize = 1024,
@@ -426,7 +434,8 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
           l3nSets = 4,
           l3nWays = 8,
           spSize = 2,
-        )
+        ),
+        L2CacheParamsOpt = None
       )
     )
   })
@@ -435,8 +444,9 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
 // Cache Hierarchy Config: 
 // * Including L1D/L2/L3 Cache
 class NanHuGCacheConfig extends Config(
-  new WithNKBL3(6 * 256, inclusive = false, banks = 4, ways = 6)
-  ++ new WithNKBL2(256,inclusive = false, banks = 4, alwaysReleaseData = true) 
+  //new WithNKBL3(6 * 256, inclusive = false, banks = 4, ways = 6)
+  new WithNKBL3(64, inclusive = false, banks = 1, ways = 4)
+  //++ new WithNKBL2(256,inclusive = false, banks = 4, alwaysReleaseData = true) 
   ++ new WithNKBL1D(32) 
 )
 
