@@ -151,7 +151,7 @@ class PtwCache()(implicit p: Parameters) extends XSModule with HasPtwConst with 
   val l1asids = l1.map(_.asid)
 
   // l2: level 1 non-leaf pte
-  val l2 = Module(new SRAMTemplate(
+  val l2 = Module(new l2SRAMTemplate(
     l2EntryType,
     set = l2tlbParams.l2nSets,
     way = l2tlbParams.l2nWays,
@@ -175,7 +175,7 @@ class PtwCache()(implicit p: Parameters) extends XSModule with HasPtwConst with 
   }
 
   // l3: level 2 leaf pte of 4KB pages
-  val l3 = Module(new SRAMTemplate(
+  val l3 = Module(new l3SRAMTemplate(
     l3EntryType,
     set = l2tlbParams.l3nSets,
     way = l2tlbParams.l3nWays,
