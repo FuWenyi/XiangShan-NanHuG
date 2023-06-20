@@ -21,6 +21,7 @@ import chisel3._
 import chisel3.util._
 import freechips.rocketchip.tilelink.{ClientMetadata, TLClientParameters, TLEdgeOut}
 import utils.{Code, ParallelOR, ReplacementPolicy, SRAMTemplate, XSDebug}
+import utils._
 
 import scala.math.max
 
@@ -65,7 +66,7 @@ class DuplicatedDataArray(implicit p: Parameters) extends AbstractDataArray {
 
     val r_way_en_reg = RegNext(io.r_way_en)
     val data_array = Array.fill(nWays) {
-      Module(new SRAMTemplate(
+      Module(new duplicated_dataSRAMTemplate(
         Bits(rowBits.W),
         set = nSets,
         way = 1,
@@ -113,7 +114,7 @@ class DuplicatedDataArray(implicit p: Parameters) extends AbstractDataArray {
 
     val row_error = Wire(Vec(blockRows, Vec(rowWords, Bool())))
     for (r <- 0 until blockRows) {
-      val ecc_array = Module(new SRAMTemplate(
+      val ecc_array = Module(new eccSRAMTemplate(
         Vec(rowWords, Bits(eccBits.W)),
         set = nSets,
         way = nWays,

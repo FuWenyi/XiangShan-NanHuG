@@ -165,8 +165,8 @@ class RecentRequestTable(implicit p: Parameters) extends PrefetchModule {
     }
   }
 
-  val rrTable = Module(new SRAMTemplate(rrTableEntry(), set = rrTableEntries, way = 1, shouldReset = true, singlePort = true))
-
+  val rrTable = Module(new rrTableSRAMTemplate(rrTableEntry(), set = rrTableEntries, way = 1, shouldReset = true, singlePort = true))
+  // println("BestOffsetPrefetchSram Width: %d, Set: %d, \n", rrTableEntry.getWidth.W, rrTableEntries)
   val wAddr = io.w.bits
   rrTable.io.w.req.valid := io.w.valid && !io.r.req.valid
   rrTable.io.w.req.bits.setIdx := idx(wAddr)

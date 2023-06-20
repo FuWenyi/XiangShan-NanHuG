@@ -22,6 +22,7 @@ import chisel3.util._
 import freechips.rocketchip.tilelink.{ClientMetadata, TLClientParameters, TLEdgeOut}
 import utils.{Code, ParallelOR, ReplacementPolicy, SRAMTemplate, XSDebug}
 import xiangshan.L1CacheErrorInfo
+import utils._
 
 // basic building blocks for L1 DCache
 class L1Metadata(implicit p: Parameters) extends DCacheBundle {
@@ -70,7 +71,7 @@ class L1MetadataArray(onReset: () => L1Metadata)(implicit p: Parameters) extends
     rst_cnt := rst_cnt + 1.U
   }
 
-  val tag_array = Module(new SRAMTemplate(UInt(encMetaBits.W), set = nSets, way = nWays,
+  val tag_array = Module(new tagSRAMTemplate(UInt(encMetaBits.W), set = nSets, way = nWays,
     shouldReset = false, holdRead = false, singlePort = true))
 
   // tag write
