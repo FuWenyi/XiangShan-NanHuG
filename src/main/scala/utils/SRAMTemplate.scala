@@ -80,6 +80,18 @@ class TS5N28HPCPLVTA32X80M2F extends ExtModule with HasExtModuleResource {
   addResource("/vsrc/TS5N28HPCPLVTA32X80M2F.v")
 }
 
+class TS5N28HPCPLVTA32X128M2F extends ExtModule with HasExtModuleResource {
+  //  val io = IO(new Bundle {
+  val Q =   IO(Output(UInt(128.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(5.W)))
+  val D =   IO(Input(UInt(128.W)))
+  //  })
+  addResource("/vsrc/TS5N28HPCPLVTA32X128M2F.v")
+}
+
 class TS5N28HPCPLVTA256X80M2F extends ExtModule with HasExtModuleResource {
   val Q =   IO(Output(UInt(80.W)))
   val CLK = IO(Input(Clock()))
@@ -134,6 +146,38 @@ class TS5N28HPCPLVTA8X512M2F extends Module {
   sram(1).A := A(4,2)
   sram(2).A := A(4,2)
   sram(3).A := A(4,2)
+
+
+  sram(0).D := D(127,0)
+  sram(1).D := D(255,128)
+  sram(2).D := D(383,256)
+  sram(3).D := D(511,384)
+
+  Q := Cat(sram(3).Q, sram(2).Q, sram(1).Q, sram(0).Q)
+}
+
+class TS5N28HPCPLVTA32X512M2F extends Module {
+  val Q =   IO(Output(UInt(512.W)))
+  val CLK = IO(Input(Clock()))
+  val CEB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val A =   IO(Input(UInt(5.W)))
+  val D =   IO(Input(UInt(512.W)))
+  
+  val sram = Seq.fill(4)(Module(new TS5N28HPCPLVTA32X128M2F()))
+  sram.map(_.CLK := CLK)
+  // sram.map(_.A := Mux(WEB, setIdx, r.req.bits.setIdx))
+  sram.zipWithIndex.map{
+    case (s, i) => s.CEB := CEB
+  }
+  sram.zipWithIndex.map{
+    case (s, i) => s.WEB := WEB
+  }
+
+  sram(0).A := A
+  sram(1).A := A
+  sram(2).A := A
+  sram(3).A := A
 
 
   sram(0).D := D(127,0)
@@ -953,7 +997,8 @@ class IcacheDataSRAMTemplate[T <: Data](
   val extra_reset = if (extraReset) Some(IO(Input(Bool()))) else None
 
   val wordType = UInt(gen.getWidth.W)
-  val array = SyncReadMem(set, Vec(way, wordType))
+  //val array = SyncReadMem(set, Vec(way, wordType))
+  val sram = Seq.fill(way)(Module(new TS5N28HPCPLVTA32X512M2F()))
   val (resetState, resetSet) = (WireInit(false.B), WireInit(0.U))
 
   if (shouldReset) {
@@ -976,9 +1021,20 @@ class IcacheDataSRAMTemplate[T <: Data](
   val setIdx = Mux(resetState, resetSet, io.w.req.bits.setIdx)
   val wdata = VecInit(Mux(resetState, 0.U.asTypeOf(Vec(way, gen)), io.w.req.bits.data).map(_.asTypeOf(wordType)))
   val waymask = Mux(resetState, Fill(way, "b1".U), io.w.req.bits.waymask.getOrElse("b1".U))
-  when (wen) { array.write(setIdx, wdata, waymask.asBools) }
+  //when (wen) { array.write(setIdx, wdata, waymask.asBools) }
 
-  val raw_rdata = array.read(io.r.req.bits.setIdx, realRen)
+  sram.map(_.CLK := clock)
+  sram.map(_.A := Mux(wen, setIdx, io.r.req.bits.setIdx))
+  sram.zipWithIndex.map{
+    case (s, i) => s.CEB := ~(wen || realRen)
+  }
+  sram.zipWithIndex.map{
+    case (s, i) => s.WEB := ~(wen && OHToUInt(io.w.req.bits.waymask.getOrElse("b0".U)) === i.U)
+  }
+  sram.map(_.D := wdata.asUInt)
+
+  val Rdata = VecInit(sram.map(_.Q))
+  //val raw_rdata = array.read(io.r.req.bits.setIdx, realRen)
 
   // bypass for dual-port SRAMs
   require(!bypassWrite || bypassWrite && !singlePort)
@@ -994,8 +1050,8 @@ class IcacheDataSRAMTemplate[T <: Data](
     else VecInit((0 until way).map(_ => LFSR64().asTypeOf(wordType)))
   val bypass_mask = need_bypass(io.w.req.valid, io.w.req.bits.setIdx, io.w.req.bits.waymask.getOrElse("b1".U), io.r.req.valid, io.r.req.bits.setIdx)
   val mem_rdata = {
-    if (singlePort) raw_rdata
-    else VecInit(bypass_mask.asBools.zip(raw_rdata).zip(bypass_wdata).map {
+    if (singlePort) Rdata
+    else VecInit(bypass_mask.asBools.zip(Rdata).zip(bypass_wdata).map {
       case ((m, r), w) => Mux(m, w, r)
     })
   }
