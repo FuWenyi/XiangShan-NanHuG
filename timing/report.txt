@@ -1,0 +1,5 @@
+core_with_l2: 198895
+l3cache: 19798
+misc(plic pma): 66933
+other: 1087
+最大路径: BPU  0.7105
