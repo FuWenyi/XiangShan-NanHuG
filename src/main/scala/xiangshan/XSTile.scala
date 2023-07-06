@@ -103,7 +103,8 @@ class XSTile()(implicit p: Parameters) extends LazyModule
 
   val l1d_to_l2_bufferOpt = coreParams.dcacheParametersOpt.map { _ =>
     val buffer = LazyModule(new TLBuffer)
-    misc.l1d_logger := buffer.node := core.memBlock.dcache.clientNode
+    //misc.l1d_logger := buffer.node :*= core.memBlock.dcache.clientNode
+    misc.l1d_logger := buffer.node :*= core.tlBus
     buffer
   }
 

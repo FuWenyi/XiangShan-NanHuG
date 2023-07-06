@@ -1,42 +1,65 @@
 package device
 
-import chisel3._
 import chipsalliance.rocketchip.config.Parameters
-import freechips.rocketchip.diplomacy.AddressSet
-import utils._
-import freechips.rocketchip.amba.axi4.AXI4SlaveNode
-import freechips.rocketchip.amba.axi4.AXI4SlavePortParameters
-import freechips.rocketchip.amba.axi4.AXI4SlaveParameters
-import freechips.rocketchip.diplomacy.RegionType
-import freechips.rocketchip.diplomacy.TransferSizes
-import freechips.rocketchip.diplomacy.LazyModuleImp
-import freechips.rocketchip.diplomacy.LazyModule
+import chisel3._
+import chisel3.util._
+import chisel3.experimental.ExtModule
+import freechips.rocketchip.amba.axi4.{AXI4EdgeParameters, AXI4MasterNode, AXI4SlaveNode}
+import freechips.rocketchip.diplomacy.{AddressSet, InModuleBody, LazyModule, LazyModuleImp, RegionType}
+import utils.MaskExpand
 
-class AXI4DTCM()(implicit p: Parameters) {
-  
-  val node = AXI4SlaveNode(Seq(AXI4SlavePortParameters(
-    Seq(AXI4SlaveParameters(
-      address       = List(address),
-      regionType    = if (cacheable) RegionType.UNCACHED else RegionType.IDEMPOTENT,
-      executable    = executable,
-      supportsRead  = TransferSizes(1, beatBytes),
-      supportsWrite = TransferSizes(1, beatBytes),
-      interleavedId = Some(0))),
-    beatBytes  = beatBytes,
-    minLatency = 1)))  
+class AXI4DTCM
+(
+  address: Seq[AddressSet],
+  memByte: Long,
+  useBlackBox: Boolean = false,
+  executable: Boolean = true,
+  beatBytes: Int = 8,
+  burstLen: Int = 16,
+)(implicit p: Parameters)
+  extends AXI4SlaveModule(address, executable, beatBytes, burstLen)
+{
+  override lazy val module = new AXI4SlaveModuleImp(this){
 
-  lazy val module = new LazyModuleImp(this) {
-    val (in, _) = node.in(0)
+    val split = beatBytes / 8
+    val bankByte = memByte / split
+    val offsetBits = log2Up(memByte)
 
-    // TODO: DTCM logic
-    // to use port(for example): in.ar.bits.addr / in.aw.bits.data / in.b.fire() / in.w.valid / in.r.ready / 
-    // AXI bus width: beatBytes
+    require(address.length >= 1)
+    val baseAddress = address(0).base
+
+    def index(addr: UInt) = ((addr - baseAddress.U)(offsetBits - 1, 0) >> log2Ceil(beatBytes)).asUInt()
+
+    def inRange(addr: UInt) = addr < (baseAddress + memByte).U
+
+    val wIdx = index(waddr) + writeBeatCnt
+    val rIdx = index(raddr) + readBeatCnt
+    val wen = in.w.fire() && inRange(waddr)
+    require(beatBytes >= 8)
+
+    val rdata = if (useBlackBox) {
+      val mems = (0 until split).map {_ => Module(new RAMHelper(bankByte))}
+      mems.zipWithIndex map { case (mem, i) =>
+        mem.clk   := clock
+        mem.en    := !reset.asBool() && ((state === s_rdata) || (state === s_wdata))
+        mem.rIdx  := (rIdx << log2Up(split)) + i.U
+        mem.wIdx  := (wIdx << log2Up(split)) + i.U
+        mem.wdata := in.w.bits.data((i + 1) * 64 - 1, i * 64)
+        mem.wmask := MaskExpand(in.w.bits.strb((i + 1) * 8 - 1, i * 8))
+        mem.wen   := wen
+      }
+      val rdata = mems.map {mem => mem.rdata}
+      Cat(rdata.reverse)
+    } else {
+      val mem = Mem(memByte / beatBytes, Vec(beatBytes, UInt(8.W)))
+
+      val wdata = VecInit.tabulate(beatBytes) { i => in.w.bits.data(8 * (i + 1) - 1, 8 * i) }
+      when(wen) {
+        mem.write(wIdx, wdata, in.w.bits.strb.asBools())
+      }
+
+      Cat(mem.read(rIdx).reverse)
+    }
+    in.r.bits.data := rdata
   }
-
-  private val sram = LazyModule(new AXI4RAM(
-    address=Seq(AddressSet(0x8,   ~0x808)),//Seq[0x20000, 0x3ff],
-    memByte= 4096,
-    executable = false
-  ))  
-  sram.node := node
 }

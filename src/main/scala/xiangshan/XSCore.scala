@@ -20,10 +20,10 @@ import chipsalliance.rocketchip.config
 import chipsalliance.rocketchip.config.Parameters
 import chisel3._
 import chisel3.util._
-import freechips.rocketchip.diplomacy.{BundleBridgeSource, LazyModule, LazyModuleImp}
+import freechips.rocketchip.diplomacy.{BundleBridgeSource, LazyModule, LazyModuleImp, AddressSet}
 import freechips.rocketchip.interrupts.{IntSinkNode, IntSinkPortSimple}
 import freechips.rocketchip.tile.HasFPUParameters
-import freechips.rocketchip.tilelink.TLBuffer
+import freechips.rocketchip.tilelink.{TLBuffer, TLToAXI4, TLXbar, TLWidthWidget}
 import huancun.utils.{ModuleNode, ResetGen, ResetGenNode}
 import system.HasSoCParameter
 import utils._
@@ -31,6 +31,7 @@ import xiangshan.backend._
 import xiangshan.backend.exu.{ExuConfig, Wb2Ctrl, WbArbiterWrapper}
 import xiangshan.cache.mmu._
 import xiangshan.frontend._
+import device.AXI4DTCM
 
 import scala.collection.mutable.ListBuffer
 
@@ -233,9 +234,13 @@ abstract class XSCoreBase()(implicit p: config.Parameters) extends LazyModule
   val writebackSources = Seq(Seq(wb2Ctrl), Seq(wbArbiter))
   writebackSources.foreach(s => ctrlBlock.addWritebackSink(s))
 
+  //tlxbar for dcache to l3 and dtcm
+  val tlBus = TLXbar()
+  tlBus :*= memBlock.dcache.clientNode
+
   //dtcm
-  val dtcm = LazyModule(new AXI4DTCM)
-  dtcm.node := TLToAXI4() := memBlock.dcache.clientNode
+  val dtcm = LazyModule(new AXI4DTCM(address = Seq(AddressSet(0x0L, 0x3ffff)), memByte = 256L * 1024, useBlackBox = false))
+  dtcm.node := TLToAXI4() := TLWidthWidget(32) := tlBus
 }
 
 class XSCore()(implicit p: config.Parameters) extends XSCoreBase
