@@ -232,6 +232,10 @@ abstract class XSCoreBase()(implicit p: config.Parameters) extends LazyModule
   val ctrlBlock = LazyModule(new CtrlBlock(dpExuConfigs))
   val writebackSources = Seq(Seq(wb2Ctrl), Seq(wbArbiter))
   writebackSources.foreach(s => ctrlBlock.addWritebackSink(s))
+
+  //dtcm
+  val dtcm = LazyModule(new AXI4DTCM)
+  dtcm.node := TLToAXI4() := memBlock.dcache.clientNode
 }
 
 class XSCore()(implicit p: config.Parameters) extends XSCoreBase
