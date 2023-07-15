@@ -58,10 +58,10 @@ class TagArray(implicit p: Parameters) extends DCacheModule {
     rst_cnt := rst_cnt + 1.U
   }
 
-  //val tag_array = Module(new SRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
-  //  shouldReset = false, holdRead = false, singlePort = true))
-  val tag_array = Module(new DcacheTagSRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
+  val tag_array = Module(new SRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
     shouldReset = false, holdRead = false, singlePort = true))
+  //val tag_array = Module(new DcacheTagSRAMTemplate(UInt(tagBits.W), set = nSets, way = nWays,
+  //  shouldReset = false, holdRead = false, singlePort = true))
 
   // val ecc_array = Module(new SRAMTemplate(UInt(eccTagBits.W), set = nSets, way = nWays,
   //   shouldReset = false, holdRead = false, singlePort = true))

@@ -375,7 +375,8 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
         UbtbSize = 128,
         // 4-way 16KB DCache        
         icacheParameters = ICacheParameters(
-          nSets = 64, 
+          nSets = 64,
+          //nSets = 256, 
           nWays = 4,
           tagECC = None,
           dataECC = None,
@@ -447,7 +448,8 @@ class NanHuGCacheConfig extends Config(
   //new WithNKBL3(6 * 256, inclusive = false, banks = 4, ways = 6)
   new WithNKBL3(64, inclusive = false, banks = 1, ways = 4)
   //++ new WithNKBL2(256,inclusive = false, banks = 4, alwaysReleaseData = true) 
-  ++ new WithNKBL1D(32) 
+  ++ new WithNKBL1D(32)
+  //++ new WithNKBL1D(64) 
 )
 
 // XSSoC Config:

@@ -103,8 +103,8 @@ class XSTile()(implicit p: Parameters) extends LazyModule
 
   val l1d_to_l2_bufferOpt = coreParams.dcacheParametersOpt.map { _ =>
     val buffer = LazyModule(new TLBuffer)
-    //misc.l1d_logger := buffer.node :*= core.memBlock.dcache.clientNode
-    misc.l1d_logger := buffer.node :*= core.tlBus
+    misc.l1d_logger := buffer.node :*= core.memBlock.dcache.clientNode
+    //misc.l1d_logger := buffer.node :*= core.tlBus
     buffer
   }
 
@@ -143,7 +143,8 @@ class XSTile()(implicit p: Parameters) extends LazyModule
   }
 
   misc.i_mmio_port := core.frontend.instrUncache.clientNode
-  misc.d_mmio_port := core.memBlock.uncache.clientNode
+  //misc.d_mmio_port := core.memBlock.uncache.clientNode
+  misc.d_mmio_port := core.mmioTlBus
 
   lazy val module = new LazyModuleImp(this){
     val io = IO(new Bundle {

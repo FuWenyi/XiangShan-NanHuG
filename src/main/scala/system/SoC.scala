@@ -131,7 +131,9 @@ trait HaveAXI4MemPort {
   this: BaseSoC =>
   val device = new MemoryDevice
   // 36-bit physical address
-  val memRange = AddressSet(0x00000000L, 0xfffffffffL).subtract(AddressSet(0x0L, 0x7fffffffL))
+  //val memRange = AddressSet(0x00000000L, 0xfffffffffL).subtract(AddressSet(0x0L, 0x7fffffffL))
+  //val memRange = AddressSet(0x00000000L, 0xfffffffffL).subtract(AddressSet(0x0L, 0x08003ffffL))
+  val memRange = AddressSet(0x080000000L, 0x3fffL) +: AddressSet.misaligned(0x080044000L, 0xf7ffbc000L)
   val memAXI4SlaveNode = AXI4SlaveNode(Seq(
     AXI4SlavePortParameters(
       slaves = Seq(
