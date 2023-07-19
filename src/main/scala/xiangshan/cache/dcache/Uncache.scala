@@ -165,7 +165,7 @@ class UncacheImp(outer: Uncache)
 
   val (bus, edge) = outer.clientNode.out.head
 
-  val resp_arb = Module(new Arbiter(new DCacheWordRespWithError, 1))
+  val resp_arb = Module(new Arbiter(new DCacheWordRespWithError, 2))
 
   val req  = io.lsq.req
   val resp = io.lsq.resp
@@ -184,10 +184,10 @@ class UncacheImp(outer: Uncache)
   bus.e.bits  := DontCare
 
   //TODO: rewrite following code since we only have 1 entry
-  val entries = (0 until 1) map { i =>
+  val entries = (0 until 2) map { i =>
     val entry = Module(new MMIOEntry(edge))
 
-    entry.io.id := i.U(1.W)
+    entry.io.id := i.U(2.W)
 
     // entry req
     entry.io.req.valid := (i.U === entry_alloc_idx) && req.valid

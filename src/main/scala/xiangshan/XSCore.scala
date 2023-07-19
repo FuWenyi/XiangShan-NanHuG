@@ -248,7 +248,7 @@ abstract class XSCoreBase()(implicit p: config.Parameters) extends LazyModule
   mmioTlBus :*= memBlock.uncache.clientNode
 
   //dtcm
-  val dtcm = LazyModule(new AXI4DTCM(address = AddressSet.misaligned(0x80004000L, 0x40000L), memByte = 256L * 1024, useBlackBox = false))
+  val dtcm = LazyModule(new AXI4DTCM(address = AddressSet.misaligned(0x80040000L, 0x40000L), memByte = 256L * 1024, useBlackBox = false))
   dtcm.node := TLToAXI4() := TLWidthWidget(8) := mmioTlBus
 }
 
