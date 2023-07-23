@@ -199,7 +199,7 @@ class MinimalSimConfig(n: Int = 1) extends Config(
   })
 )
 
-class WithNKBL1D(n: Int, ways: Int = 4) extends Config((site, here, up) => {
+class WithNKBL1D(n: Int, ways: Int = 8) extends Config((site, here, up) => {
   case XSTileKey =>
     val sets = n * 1024 / ways / 64
     up(XSTileKey).map(_.copy(
@@ -279,10 +279,10 @@ class WithNKBL3(n: Int, ways: Int = 8, inclusive: Boolean = true, banks: Int = 1
           )*/
           CacheParameters(
             "dcache",
-            sets = 2 * core.dcacheParametersOpt.get.nSets,
+            sets = core.dcacheParametersOpt.get.nSets / banks,
             ways = core.dcacheParametersOpt.get.nWays + 2,
-            blockGranularity = log2Ceil(2 * core.dcacheParametersOpt.get.nSets),
-            aliasBitsOpt = None
+            blockGranularity = log2Ceil(core.dcacheParametersOpt.get.nSets / banks),
+            aliasBitsOpt = core.dcacheParametersOpt.get.aliasBitsOpt
           )
         },
         //enablePerf = true,
@@ -375,9 +375,9 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
         UbtbSize = 128,
         // 4-way 16KB DCache        
         icacheParameters = ICacheParameters(
-          nSets = 64,
+          nSets = 256,
           //nSets = 256, 
-          nWays = 4,
+          nWays = 8,
           tagECC = None,
           dataECC = None,
           replacer = Some("setplru"),
@@ -446,9 +446,9 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
 // * Including L1D/L2/L3 Cache
 class NanHuGCacheConfig extends Config(
   //new WithNKBL3(6 * 256, inclusive = false, banks = 4, ways = 6)
-  new WithNKBL3(64, inclusive = false, banks = 1, ways = 4)
+  new WithNKBL3(32, inclusive = false, banks = 1, ways = 2)
   //++ new WithNKBL2(256,inclusive = false, banks = 4, alwaysReleaseData = true) 
-  ++ new WithNKBL1D(32)
+  ++ new WithNKBL1D(32, 2)
   //++ new WithNKBL1D(64) 
 )
 
