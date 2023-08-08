@@ -244,12 +244,12 @@ abstract class XSCoreBase()(implicit p: config.Parameters) extends LazyModule
   dtcm.node := TLToAXI4() := TLWidthWidget(32) := tlBus*/
 
   //tlxbar for uncache to l3 and dtcm
-  val mmioTlBus = TLXbar()
+  /*val mmioTlBus = TLXbar()
   mmioTlBus :*= memBlock.uncache.clientNode
 
   //dtcm
   val dtcm = LazyModule(new AXI4DTCM(address = AddressSet.misaligned(0x80040000L, 0x40000L), memByte = 256L * 1024, useBlackBox = false))
-  dtcm.node := TLToAXI4() := TLWidthWidget(8) := mmioTlBus
+  dtcm.node := TLToAXI4() := TLWidthWidget(8) := mmioTlBus*/
 }
 
 class XSCore()(implicit p: config.Parameters) extends XSCoreBase

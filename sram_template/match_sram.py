@@ -3,7 +3,7 @@
 import re
 
 def extract_data(file_path):
-    pattern = r',<(\d+)>,(\d+),'
+    pattern = r',<(\d+)>,(\d+),(\d+)'
     count_dict = {}
 
     with open(file_path, 'r') as f:
@@ -12,10 +12,11 @@ def extract_data(file_path):
             matches = re.findall(pattern, line)
             for match in matches:
                 data = (int(match[0]), int(match[1]))
+                way = int(match[2])
                 if data in count_dict:
-                    count_dict[data] += 1
+                    count_dict[data] += way
                 else:
-                    count_dict[data] = 1
+                    count_dict[data] = way
 
     return count_dict
 
@@ -39,4 +40,4 @@ print("Total bits sum:", total_bits_sum)
 
 with open('sram_type.txt', 'w') as f:
     for data, count in count_dict.items():
-        f.write(str(data) + '\n')
+        f.write(str(data) + ' ' + str(count) + '\n')

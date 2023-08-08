@@ -95,7 +95,7 @@ class XSTop()(implicit p: Parameters) extends BaseXSSoc() with HasSoCParameter
     misc.plic.intnode := IntBuffer() := int
   }))
 
-  val core_rst_nodes = if(l3cacheOpt.nonEmpty && l3cacheOpt.get.rst_nodes.nonEmpty){
+  val core_rst_nodes = if(l3cacheOpt.isDefined && l3cacheOpt.nonEmpty && l3cacheOpt.get.rst_nodes.nonEmpty){
     l3cacheOpt.get.rst_nodes.get
   } else {
     core_with_l2.map(_ => BundleBridgeSource(() => Reset()))
@@ -109,7 +109,7 @@ class XSTop()(implicit p: Parameters) extends BaseXSSoc() with HasSoCParameter
     case Some(l3) =>
       misc.l3_out :*= l3.node :*= TLBuffer.chainNode(2) :*= misc.l3_banked_xbar
     case None =>
-  }
+  } 
 
   lazy val module = new LazyRawModuleImp(this) {
     ElaborationArtefacts.add("dts", dts)
@@ -170,7 +170,7 @@ class XSTop()(implicit p: Parameters) extends BaseXSSoc() with HasSoCParameter
       io.riscv_halt(i) := core.module.io.cpu_halt
     }
 
-    if(l3cacheOpt.isEmpty || l3cacheOpt.get.rst_nodes.isEmpty){
+    if(!l3cacheOpt.isDefined || l3cacheOpt.isEmpty || l3cacheOpt.get.rst_nodes.isEmpty){
       // tie off core soft reset
       for(node <- core_rst_nodes){
         node.out.head._1 := false.B.asAsyncReset()

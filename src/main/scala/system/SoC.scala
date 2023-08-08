@@ -81,6 +81,7 @@ class ILABundle extends Bundle {}
 
 abstract class BaseSoC()(implicit p: Parameters) extends LazyModule with HasSoCParameter {
   val bankedNode = BankBinder(L3NBanks, L3BlockSize)
+  val cachecork = TLCacheCork()
   val peripheralXbar = TLXbar()
   val l3_xbar = TLXbar()
   val l3_banked_xbar = TLXbar()
@@ -131,9 +132,9 @@ trait HaveAXI4MemPort {
   this: BaseSoC =>
   val device = new MemoryDevice
   // 36-bit physical address
-  //val memRange = AddressSet(0x00000000L, 0xfffffffffL).subtract(AddressSet(0x0L, 0x7fffffffL))
+  val memRange = AddressSet(0x00000000L, 0xfffffffffL).subtract(AddressSet(0x0L, 0x7fffffffL))
   //val memRange = AddressSet(0x080000000L, 0x3fffL) +: AddressSet.misaligned(0x080044000L, 0xf7ffbc000L)
-  val memRange = AddressSet(0x080000000L, 0x3ffffL) +: AddressSet.misaligned(0x080080000L, 0xf7ff80000L)
+  //val memRange = AddressSet(0x080000000L, 0x3ffffL) +: AddressSet.misaligned(0x080080000L, 0xf7ff80000L)
   val memAXI4SlaveNode = AXI4SlaveNode(Seq(
     AXI4SlavePortParameters(
       slaves = Seq(
@@ -243,7 +244,7 @@ class SoCMisc()(implicit p: Parameters) extends BaseSoC
 
   if(soc.L3CacheParamsOpt.isEmpty){
     l3_out :*= l3_in
-  }
+  } 
 
   for(port <- peripheral_ports) {
     peripheralXbar := TLBuffer.chainNode(2, Some("L2_to_L3_peripheral_buffer")) := port

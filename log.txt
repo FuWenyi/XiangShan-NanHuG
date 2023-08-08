@@ -1,0 +1,5 @@
+TagSRAMTemplate
+EccSRAMTemplate
+ReplaceSRAMTemplate
+RrSRAMTemplate
+WrapSRAMTemplate

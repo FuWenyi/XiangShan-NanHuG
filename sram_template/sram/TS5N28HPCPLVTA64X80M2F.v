@@ -1,9 +1,9 @@
-module TS5N28HPCPLVTA256X80M2F(
+module TS5N28HPCPLVTA64X80M2F(
     Q, CLK, CEB, WEB, A, D
 );
 parameter Bits = 80;
-parameter Word_Depth = 256;
-parameter Add_Width = 8;
+parameter Word_Depth = 64;
+parameter Add_Width = 6;
 
 output  reg [Bits-1:0]      Q;
 input                   CLK;

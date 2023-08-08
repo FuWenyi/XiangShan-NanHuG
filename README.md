@@ -119,3 +119,5 @@ We are grateful for the support of the open-source community and encourage other
 make emu CONFIG=NanHuGConfig -j32
 make verilog CONFIG=NanHuGConfig -j32
 ./build/emu -i ./ready-to-run/microbench.bin
+
+make ARCH=riscv64-xs

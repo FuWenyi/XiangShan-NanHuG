@@ -181,6 +181,7 @@ class MinimalConfig(n: Int = 1) extends Config(
           },
           simulation = !site(DebugOptionsKey).FPGAPlatform
         )),
+        // L3CacheParamsOpt = None,
         L3NBanks = 1
       )
   })
@@ -290,7 +291,7 @@ class WithNKBL3(n: Int, ways: Int = 8, inclusive: Boolean = true, banks: Int = 1
           address = 0x39000000,
           numCores = tiles.size
         )),
-        sramClkDivBy2 = true,
+        //sramClkDivBy2 = true,
         sramDepthDiv = 4,
         tagECC = None,
         dataECC = None,
@@ -335,27 +336,27 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
   new BaseConfig(n).alter((site, here, up) => {
     case XSTileKey => up(XSTileKey).map(
       _.copy(
-        DecodeWidth = 4,
-        RenameWidth = 4,
+        DecodeWidth = 3,
+        RenameWidth = 3,
         FetchWidth = 8,
-        IssQueSize = 8,
+        IssQueSize = 6,
         NRPhyRegs = 64,
-        LoadQueueSize = 32,
+        LoadQueueSize = 20,
         LoadQueueNWriteBanks = 4,
-        StoreQueueSize = 24,
+        StoreQueueSize = 12,
         StoreQueueNWriteBanks = 4,
-        RobSize = 96,
-        FtqSize = 16,
-        IBufSize = 32,
+        RobSize = 48,
+        FtqSize = 12,
+        IBufSize = 24,
         StoreBufferSize = 4,
         StoreBufferThreshold = 3,
         dpParams = DispatchParameters(
-          IntDqSize = 12,
-          FpDqSize = 12,
-          LsDqSize = 12,
-          IntDqDeqWidth = 4,
-          FpDqDeqWidth = 4,
-          LsDqDeqWidth = 4
+          IntDqSize = 8,
+          FpDqSize = 8,
+          LsDqSize = 8,
+          IntDqDeqWidth = 3,
+          FpDqDeqWidth = 3,
+          LsDqDeqWidth = 3
         ),
         exuParameters = ExuParameters(
           JmpCnt = 1,
@@ -371,13 +372,13 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
         prefetcher = None,
         EnableSC = false,
         EnableLoop = false,
-        FtbSize = 1024,
-        UbtbSize = 128,
+        FtbSize = 256,
+        UbtbSize = 32,
         // 4-way 16KB DCache        
         icacheParameters = ICacheParameters(
-          nSets = 256,
-          //nSets = 256, 
-          nWays = 8,
+          nSets = 64,
+          //nSets = 128, 
+          nWays = 4,
           tagECC = None,
           dataECC = None,
           replacer = Some("setplru"),
@@ -446,9 +447,9 @@ class NanHuGCoreConfig(n: Int = 1) extends Config(
 // * Including L1D/L2/L3 Cache
 class NanHuGCacheConfig extends Config(
   //new WithNKBL3(6 * 256, inclusive = false, banks = 4, ways = 6)
-  new WithNKBL3(32, inclusive = false, banks = 1, ways = 2)
+  new WithNKBL3(32, inclusive = false, banks = 1, ways = 8)
   //++ new WithNKBL2(256,inclusive = false, banks = 4, alwaysReleaseData = true) 
-  ++ new WithNKBL1D(32, 2)
+  ++ new WithNKBL1D(32, 8)
   //++ new WithNKBL1D(64) 
 )
 

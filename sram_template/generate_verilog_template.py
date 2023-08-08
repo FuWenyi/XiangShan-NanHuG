@@ -6,7 +6,7 @@ import re
 def generate_verilog_file(bits, word_depth, add_width):
     file_name = 'TS5N28HPCPLVTA{}X{}M2F.v'.format(word_depth, bits)
     with open(file_name, 'w') as f:
-        with open('sram_template.v', 'r') as template_file:
+        with open('../sram_template.v', 'r') as template_file:
             template = template_file.read()
             template = template.replace('TS5N28HPCPLVTA128X64M2F', 'TS5N28HPCPLVTA{}X{}M2F'.format(word_depth, bits))
             template = template.replace('Bits = 64', 'Bits = {}'.format(bits))
@@ -28,4 +28,4 @@ def process_parameter_file(file_path):
                 generate_verilog_file(bits, word_depth, add_width)
 
 # 提供参数文件路径调用函数处理参数并生成相应的Verilog文件
-process_parameter_file('sram_type.txt')
+process_parameter_file('../sram_type.txt')

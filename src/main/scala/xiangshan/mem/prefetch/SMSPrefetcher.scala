@@ -498,7 +498,12 @@ class PatternHistoryTable()(implicit p: Parameters) extends XSModule with HasSMS
     val pf_gen_req = ValidIO(new PfGenReq())
   })
 
-  val pht_ram = Module(new SRAMTemplate[PhtEntry](new PhtEntry,
+  /*val pht_ram = Module(new SRAMTemplate[PhtEntry](new PhtEntry,
+    set = smsParams.pht_size / smsParams.pht_ways,
+    way =smsParams.pht_ways,
+    singlePort = true
+  ))*/
+  val pht_ram = Module(new PHTSRAMTemplate[PhtEntry](new PhtEntry,
     set = smsParams.pht_size / smsParams.pht_ways,
     way =smsParams.pht_ways,
     singlePort = true
