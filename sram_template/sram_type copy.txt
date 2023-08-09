@@ -22,7 +22,7 @@ io    word  num  sp     sram type
 icache 16 4 dcache 32 8 l3 32 8
 io    word  num  sp     sram type 
 (50,  128)  16          -> (64, 128)        Folded_1(ok)
-(261, 4)    4           -> 2 * (144, 8)     PTl2
+(261, 4)    4           -> 2 * (144, 8)     PTl2(ok)
 (512, 32)   8           -> 4 * (128, 32)    ICache Data
 (7,   64)   9           -> (8, 64)          L3 Meta_1(ok) / L3 Replace(ok)
 (12,  256)  64          -> (16, 256)        Folded_3(ok)
@@ -32,8 +32,8 @@ io    word  num  sp     sram type
 (512, 12)   1    F      -> 4 * (128, 16)    Ftq_2
 (2,   2048) 2    F      -> 4 * (2, 512)     BigTable
 (80,  64)   4           -> (80, 64)         Ftb(ok)
-(334, 4)    8           -> 3 * (128, 8)     PTl3
-(1,   256)  64          -> 2 * (8, 128)     Folded_2
+(334, 4)    8           -> 3 * (128, 8)     PTl3(ok)
+(1,   256)  64          -> 2 * (8, 128)     Folded_2(ok)
 (24,  64)   42          -> (32, 64)         L3 Tag(ok) / DCache Tag(ok)
 (233, 12)   3    F      -> 2 * (128, 16)    Ftq_1
 (4,   64)   10          -> (8, 64)          L3 Meta_2(ok)
