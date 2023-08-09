@@ -36,6 +36,18 @@ import chisel3._
 import chisel3.experimental.ExtModule
 import chisel3.util._
 
+class TS5N28HPCPLVTA12X233M2F extends ExtModule with HasExtModuleResource {
+  val Q =   IO(Output(UInt(233.W)))
+  val CLKW = IO(Input(Clock()))
+  val CLKR = IO(Input(Clock()))
+  val REB = IO(Input(Bool()))
+  val WEB = IO(Input(Bool()))
+  val AA =  IO(Input(UInt(12.W)))
+  val AB =  IO(Input(UInt(12.W)))
+  val D =   IO(Input(UInt(233.W)))
+  addResource("/vsrc/TS5N28HPCPLVTA12X233M2F.v")
+}
+
 class TS5N28HPCPLVTA32X32M2F extends ExtModule with HasExtModuleResource {
   val Q =   IO(Output(UInt(32.W)))
   val CLK = IO(Input(Clock()))
@@ -973,7 +985,7 @@ class Ftq1SRAMTemplate[T <: Data](
   val extra_reset = if (extraReset) Some(IO(Input(Bool()))) else None
 
   val wordType = UInt(gen.getWidth.W)
-  val array = SyncReadMem(set, Vec(way, wordType))
+  val sram = Seq.fill(way)(Module(new TS5N28HPCPLVTA12X233M2F()))
   val (resetState, resetSet) = (WireInit(false.B), WireInit(0.U))
 
   if (shouldReset) {
@@ -996,9 +1008,19 @@ class Ftq1SRAMTemplate[T <: Data](
   val setIdx = Mux(resetState, resetSet, io.w.req.bits.setIdx)
   val wdata = VecInit(Mux(resetState, 0.U.asTypeOf(Vec(way, gen)), io.w.req.bits.data).map(_.asTypeOf(wordType)))
   val waymask = Mux(resetState, Fill(way, "b1".U), io.w.req.bits.waymask.getOrElse("b1".U))
-  when (wen) { array.write(setIdx, wdata, waymask.asBools) }
+  sram.map(_.CLKR := clock)
+  sram.map(_.CLKW := clock)
+  sram.map(_.AA := Mux(wen, setIdx, io.r.req.bits.setIdx))
+  sram.map(_.AB := Mux(wen, setIdx, io.r.req.bits.setIdx))
+  sram.zipWithIndex.map{
+    case (s, i) => s.REB := ~(realRen)
+  }
+  sram.zipWithIndex.map{
+    case (s, i) => s.WEB := ~(wen && OHToUInt(io.w.req.bits.waymask.getOrElse("b0".U)) === i.U)
+  }
+  sram.map(_.D := wdata.asUInt)
 
-  val raw_rdata = array.read(io.r.req.bits.setIdx, realRen)
+  val Rdata = VecInit(sram.map(_.Q))
 
   // bypass for dual-port SRAMs
   require(!bypassWrite || bypassWrite && !singlePort)
@@ -1014,8 +1036,8 @@ class Ftq1SRAMTemplate[T <: Data](
     else VecInit((0 until way).map(_ => LFSR64().asTypeOf(wordType)))
   val bypass_mask = need_bypass(io.w.req.valid, io.w.req.bits.setIdx, io.w.req.bits.waymask.getOrElse("b1".U), io.r.req.valid, io.r.req.bits.setIdx)
   val mem_rdata = {
-    if (singlePort) raw_rdata
-    else VecInit(bypass_mask.asBools.zip(raw_rdata).zip(bypass_wdata).map {
+    if (singlePort) Rdata
+    else VecInit(bypass_mask.asBools.zip(Rdata).zip(bypass_wdata).map {
       case ((m, r), w) => Mux(m, w, r)
     })
   }
