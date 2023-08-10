@@ -24,19 +24,19 @@ io    word  num  sp     sram type
 (50,  128)  16          -> (64, 128)        Folded_1(ok) C
 (261, 4)    4           -> 2 * (144, 8)     PTl2(ok) C
 (512, 32)   8           -> 4 * (128, 32)    ICache Data C
-(7,   64)   9           -> (8, 64)          L3 Meta_1(ok) / L3 Replace(ok)
+(7,   64)   9           -> (8, 64)          L3 Meta_1(ok) / L3 Replace(ok) C
 (12,  256)  64          -> (16, 256)        Folded_3(ok) C
 (26,  32)   8           -> (32, 32)         ICache Tag(ok) C
-(64,  128)  32          -> (64, 128)        L3 Wrap(ok)
+(64,  128)  32          -> (64, 128)        L3 Wrap(ok) C
 (64,  64)   64          -> (64, 64)         DCache Data(ok) C
 (512, 12)   1    F      -> 4 * (128, 16)    Ftq_2()
 (2,   2048) 2    F      -> 4 * (2, 512)     BigTable()
 (80,  64)   4           -> (80, 64)         Ftb(ok) C
 (334, 4)    8           -> 3 * (128, 8)     PTl3(ok) C
-(1,   256)  64          -> 2 * (8, 128)     Folded_2(ok) Wrong->Modify C
-(24,  64)   42          -> (32, 64)         L3 Tag(ok) / DCache Tag(ok) C
+(1,   256)  64          -> 2 * (8, 128)     Folded_2(ok) Wrong->Modify C 
+(24,  64)   42          -> (32, 64)         L3 Tag(ok) / DCache Tag(ok) C 
 (233, 12)   3    F      -> 2 * (128, 16)    Ftq_1()
-(4,   64)   10          -> (8, 64)          L3 Meta_2(ok)
+(4,   64)   10          -> (8, 64)          L3 Meta_2(ok) C
 
 
 
