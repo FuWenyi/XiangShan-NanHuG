@@ -379,7 +379,8 @@ class TS5N28HPCPLVTA256X8M2F extends Module {
     case (s, i) => s.D := D
   }
 
-  Q := Mux(A(7), sram(1).Q, sram(0).Q) 
+  val sel = RegNext(A(7))
+  Q := Mux(sel, sram(1).Q, sram(0).Q) 
 }
 
 class SRAMBundleA(val set: Int) extends Bundle {
