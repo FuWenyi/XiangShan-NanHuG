@@ -21,7 +21,7 @@ always @(posedge CLKW) begin
     end
 end
 
-always @(posedge CLKW) begin
+always @(posedge CLKR) begin
     Q <= !REB ? ram[AB] : {4{$random}};
 end
 
