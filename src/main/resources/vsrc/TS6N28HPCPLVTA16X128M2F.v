@@ -1,9 +1,9 @@
-module TS5N28HPCPLVTA512X2M2F(
+module TS6N28HPCPLVTA16X128M2F(
     Q, CLKW, CLKR, REB, WEB, AA, AB, D
 );
-parameter Bits = 2;
-parameter Word_Depth = 512;
-parameter Add_Width = 9;
+parameter Bits = 128;
+parameter Word_Depth = 16;
+parameter Add_Width = 4;
 
 output  reg [Bits-1:0]      Q;
 input                   CLKW;

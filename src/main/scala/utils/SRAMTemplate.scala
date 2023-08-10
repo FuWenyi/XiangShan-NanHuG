@@ -229,7 +229,7 @@ class TS5N28HPCPLVTA8X384M2F extends Module {
   Q := Cat(sram(2).Q, sram(1).Q, sram(0).Q)
 }
 
-class TS5N28HPCPLVTA16X128M2F extends ExtModule with HasExtModuleResource {
+class TS6N28HPCPLVTA16X128M2F extends ExtModule with HasExtModuleResource {
   val Q =   IO(Output(UInt(128.W)))
   val CLKW = IO(Input(Clock()))
   val CLKR = IO(Input(Clock()))
@@ -238,7 +238,7 @@ class TS5N28HPCPLVTA16X128M2F extends ExtModule with HasExtModuleResource {
   val AA =  IO(Input(UInt(4.W)))
   val AB =  IO(Input(UInt(4.W)))
   val D =   IO(Input(UInt(128.W)))
-  addResource("/vsrc/TS5N28HPCPLVTA16X128M2F.v")
+  addResource("/vsrc/TS6N28HPCPLVTA16X128M2F.v")
 }
 
 class TS5N28HPCPLVTA16X256M2F extends Module {
@@ -251,7 +251,7 @@ class TS5N28HPCPLVTA16X256M2F extends Module {
   val AB =   IO(Input(UInt(4.W)))
   val D =   IO(Input(UInt(256.W)))
   
-  val sram = Seq.fill(2)(Module(new TS5N28HPCPLVTA16X128M2F()))
+  val sram = Seq.fill(2)(Module(new TS6N28HPCPLVTA16X128M2F()))
   sram.map(_.CLKW := CLKW)
   sram.map(_.CLKR := CLKR)
   sram.zipWithIndex.map{
@@ -283,7 +283,7 @@ class TS5N28HPCPLVTA16X512M2F extends Module {
   val AB =   IO(Input(UInt(4.W)))
   val D =   IO(Input(UInt(512.W)))
   
-  val sram = Seq.fill(4)(Module(new TS5N28HPCPLVTA16X128M2F()))
+  val sram = Seq.fill(4)(Module(new TS6N28HPCPLVTA16X128M2F()))
   sram.map(_.CLKW := CLKW)
   sram.map(_.CLKR := CLKR)
   sram.zipWithIndex.map{
@@ -307,7 +307,7 @@ class TS5N28HPCPLVTA16X512M2F extends Module {
   Q := Cat(sram(3).Q, sram(2).Q, sram(1).Q, sram(0).Q)
 }
 
-class TS5N28HPCPLVTA512X2M2F extends ExtModule with HasExtModuleResource {
+class TS6N28HPCPLVTA512X2M2F extends ExtModule with HasExtModuleResource {
   val Q =   IO(Output(UInt(2.W)))
   val CLKW = IO(Input(Clock()))
   val CLKR = IO(Input(Clock()))
@@ -316,7 +316,7 @@ class TS5N28HPCPLVTA512X2M2F extends ExtModule with HasExtModuleResource {
   val AA =  IO(Input(UInt(9.W)))
   val AB =  IO(Input(UInt(9.W)))
   val D =   IO(Input(UInt(2.W)))
-  addResource("/vsrc/TS5N28HPCPLVTA512X2M2F.v")
+  addResource("/vsrc/TS6N28HPCPLVTA512X2M2F.v")
 }
 
 class TS5N28HPCPLVTA2048X2M2F extends Module {
@@ -329,7 +329,7 @@ class TS5N28HPCPLVTA2048X2M2F extends Module {
   val AB =   IO(Input(UInt(11.W)))
   val D =   IO(Input(UInt(2.W)))
   
-  val sram = Seq.fill(4)(Module(new TS5N28HPCPLVTA512X2M2F()))
+  val sram = Seq.fill(4)(Module(new TS6N28HPCPLVTA512X2M2F()))
   sram.map(_.CLKW := CLKW)
   sram.map(_.CLKR := CLKR)
   sram.zipWithIndex.map{

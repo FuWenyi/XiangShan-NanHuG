@@ -1,10 +1,10 @@
-fuwenyi@open03:~/NanHuG/xs-env/XiangShan$ make emu CONFIG=NanHuGConfig -j32
+fuwenyi@open03:~/NanHuG/xs-env/XiangShan$ make emu CONFIG=NanHuGConfig -j64
 make -C ./difftest emu SIM_TOP=SimTop DESIGN_DIR=/nfs/home/fuwenyi/NanHuG/xs-env/XiangShan NUM_CORES=1
 make[1]: Entering directory '/nfs/home/fuwenyi/NanHuG/xs-env/XiangShan/difftest'
 make -C /nfs/home/fuwenyi/NanHuG/xs-env/XiangShan sim-verilog
 make[2]: Entering directory '/nfs/home/fuwenyi/NanHuG/xs-env/XiangShan'
 mkdir -p build
-Wed, 09 Aug 2023 11:52:45 +0800
+Thu, 10 Aug 2023 11:34:43 +0800
 time -a -o ./build/time.log mill -i XiangShan.test.runMain top.SimTop -td build      \
         --config NanHuGConfig --full-stacktrace --output-file SimTop.v    \
         --infer-rw --repl-seq-mem -c:top.SimTop:-o:build/SimTop.v.conf  \
@@ -15,7 +15,7 @@ time -a -o ./build/time.log mill -i XiangShan.test.runMain top.SimTop -td build 
 [warn] two deprecations (since 2.11.0)
 [warn] 492 deprecations (since Chisel 3.5)
 [warn] 494 deprecations in total; re-run with -deprecation for details
-[warn] 9357 feature warnings; re-run with -feature for details
+[warn] 9372 feature warnings; re-run with -feature for details
 [warn] four warnings found
 [info] done compiling
 [226/236] XiangShan.test.compile 
@@ -837,8 +837,8 @@ RS 5: type StdExu, size 12, enq 2, deq 2, numSrc 1, fast 0, wakeup 9
   outFastPorts: List()
   loadBalance: true
 REGFILE: 64 entries, 10 read ports, 5 write ports
-List(xiangshan.backend.fu.Alu@67c635a) List(xiangshan.backend.fu.Alu@67c635a) hasRedirect: 1
-List(xiangshan.backend.fu.ArrayMultiplier@63c7de1f, xiangshan.backend.fu.DividerWrapper@19314a2, xiangshan.backend.fu.Bku@7d1881b0) List() hasRedirect: 0
+List(xiangshan.backend.fu.Alu@56d7944d) List(xiangshan.backend.fu.Alu@56d7944d) hasRedirect: 1
+List(xiangshan.backend.fu.ArrayMultiplier@4d8c5b0b, xiangshan.backend.fu.DividerWrapper@e71384e, xiangshan.backend.fu.Bku@36dc3660) List() hasRedirect: 0
 CSR smblockctl init value:
   Store buffer replace threshold: 3
   Enable ld-ld vio check after reset: true
@@ -1066,7 +1066,7 @@ XiangShan CSR Lists
 WARNING: fast not implemented!! jmp will be delayed for one cycle.
 WARNING: fast not implemented!! csr will be delayed for one cycle.
 WARNING: fast not implemented!! fence will be delayed for one cycle.
-List(xiangshan.backend.fu.Jump@f9642a4, xiangshan.backend.fu.CSR@263e4f27, xiangshan.backend.fu.Fence@5c543a01, xiangshan.backend.fu.fpu.IntToFP@663e0399) List(xiangshan.backend.fu.Jump@f9642a4) hasRedirect: 1
+List(xiangshan.backend.fu.Jump@5e3f0788, xiangshan.backend.fu.CSR@2eeb50af, xiangshan.backend.fu.Fence@49181b62, xiangshan.backend.fu.fpu.IntToFP@28a1211a) List(xiangshan.backend.fu.Jump@5e3f0788) hasRedirect: 1
 scheduler.writeback(0) is connected from exu AluExeUnit
 scheduler.writeback(1) is connected from exu AluExeUnit
 writeback from exu 0 is replaced by RegNext(rs.fastUopOut)
@@ -1092,8 +1092,8 @@ RS 1: type FmiscExeUnit, size 6, enq 1, deq 1, numSrc 2, fast 1, wakeup 4
   outFastPorts: List(5)
   loadBalance: true
 REGFILE: 64 entries, 5 read ports, 4 write ports
-List(xiangshan.backend.fu.fpu.FMA@20d10a2c) List() hasRedirect: 0
-List(xiangshan.backend.fu.fpu.FPToInt@760effee, xiangshan.backend.fu.fpu.FPToFP@8a214ba, xiangshan.backend.fu.fpu.FDivSqrt@6601e99f) List() hasRedirect: 0
+List(xiangshan.backend.fu.fpu.FMA@6b046212) List() hasRedirect: 0
+List(xiangshan.backend.fu.fpu.FPToInt@6d68a214, xiangshan.backend.fu.fpu.FPToFP@461d3fdf, xiangshan.backend.fu.fpu.FDivSqrt@5b9a4f0a) List() hasRedirect: 0
 Enable fast wakeup from function unit FmacExeUnit
 scheduler.writeback(5) is connected from exu FmacExeUnit
 DCache:
@@ -1242,8 +1242,8 @@ DCache:
 ,<24>,64,8,true)
 Cache op decoder (dcache):
   Id 1
-List(xiangshan.backend.Std@467f0f78, xiangshan.backend.Std@4c4fdb4) List() hasRedirect: 0
-List(xiangshan.backend.Std@caa4bcd, xiangshan.backend.Std@74a5e4e5) List() hasRedirect: 0
+List(xiangshan.backend.Std@1ae64046, xiangshan.backend.Std@1c7c8ad7) List() hasRedirect: 0
+List(xiangshan.backend.Std@3a63b010, xiangshan.backend.Std@5c215be) List() hasRedirect: 0
 LoadQueue: size:20
 StoreQueue: size:12
 tlb_sa: nSets:16 nWays:1
